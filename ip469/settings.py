@@ -2,7 +2,7 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-PROJECT_ROOT = '/home/sanmimu/IP469/ip469_com/'
+PROJECT_ROOT = '/home/sanmimu/IP469/ip469/'
 LOG_ROOT = '/tmp/'
 
 # DEBUG = False
@@ -105,4 +105,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'ip469.ip',
+    'ip469.tuan',
+    'ip469.spider',
 )

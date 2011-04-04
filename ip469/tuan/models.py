@@ -1,8 +1,6 @@
 # -*-coding:utf-8-*-
 
 from django.db import models
-from django.contrib import admin
-
 
 # 团购商品的信息
 class Deal(models.Model):
@@ -23,8 +21,6 @@ class Deal(models.Model):
     rank = models.IntegerField(default=0, help_text='商品等级')
     def __unicode__(self):
         return self.title
-    class Admin(admin.ModelAdmin):
-        pass
 
 
 # 团购网站的信息
@@ -66,8 +62,3 @@ class SiteCity(models.Model):
         return self.name
     
 
-admin.site.register(Deal, Deal.Admin)
-admin.site.register(Site)
-admin.site.register(Category)
-admin.site.register(City)
-admin.site.register(SiteCity)

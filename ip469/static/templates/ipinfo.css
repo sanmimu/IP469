@@ -1,44 +1,8 @@
 /* -*-coding:utf-8-*- */
 
-body
-{
-    font-family: Arial,Helvetica,sans-serif;
-    font-size: 14px;
-}
-
-/* --- header section --- */
-
-.header 
-{
-    padding: 3px 8px 0;
-    margin:0 auto;              /*居中作用*/
-    height: 18px;
-    border-bottom: 1px solid #C9D7F1;
-    font-size: 13px;
-    width: 75%;
-}
-
-.header .left
-{
-    float: left;
-}
-
-.header .right
-{
-    float: right;
-    text-align: right;
-}
-
 h2
 {
     text-align: center;
-}
-
-.footer
-{
-    margin-top: 50px;
-    text-align: center;
-    font-size: 12px;
 }
 
 /* 查询结果信息区 */

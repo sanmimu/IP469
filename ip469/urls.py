@@ -12,6 +12,8 @@ urlpatterns = patterns(
     (r'^$', 'ip469.ip.views.default'),
     
     (r'^ip/', include('ip469.ip.urls')),
+    (r'^tuan/', include('ip469.tuan.urls')),
+    (r'^spider/', include('ip469.spider.urls')),
 
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',
      {'document_root': settings.STATIC_ROOT}),

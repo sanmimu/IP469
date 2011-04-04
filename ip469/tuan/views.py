@@ -43,7 +43,7 @@ def tuan_city_category_page(request, city, category, page):
         if len(deal.title) <= MAX_TITLE_LEN:
             deal.title_short = deal.title
         else:
-            deal.title_short = deal.title[:MAX_TITLE_LEN] + unicode('…','utf-8') #'...'
+            deal.title_short = deal.title[:MAX_TITLE_LEN] + '……'
         site = models.Site.objects.filter(site=deal.site)
         if site.count() == 1:
             deal.site_name = site[0].name

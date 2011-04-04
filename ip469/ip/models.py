@@ -22,5 +22,3 @@ class Ipv4Info(models.Model):
     #def __str__(self):
     #    return encoding.iri_to_uri(unicode(self))
 
-
-admin.site.register(Ipv4Info)

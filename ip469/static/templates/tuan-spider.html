@@ -1,0 +1,25 @@
+<!-- -*-coding:utf-8-*- -->
+
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>团购单 - 爬虫</title>
+  </head>
+
+  <body>
+
+<h3>成功抓取 {{ n_grab }} 条记录</h3>
+
+<div>
+  <ul>
+    {% for res in results %}
+    {% if res.is_ok %}
+    <lo>从 {{ res.site }} 的 {{ res.city }} 抓到 {{res.n}} 条记录，URL是： {{ res.url }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+</body>
+</html>
