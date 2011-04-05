@@ -1,16 +1,53 @@
 /* -*-coding:utf-8-*- */
 
-/* 设置页面基本属性 */
+/** 
+    页面框架属性
+    see: http://www.th7.cn/Article/wy/cs/200812/343046_2.html
+    组成元素：
+    - container 整个页面元素
+      - header 头部
+      - content 内容（左右黄金分割）
+        - mainbox 主体内容区域
+        - sidebar 侧栏
+          - sidebox 内容区域（符合黄金分割）
+            - sidebox-top,content,bottom
+      - footer 脚注
+ */
 
-body
+.container
 {
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: '微软雅黑','黑体',Hei,'宋体',Songti宋体,SimSun,Verdana,Helvetica,sans-serif !important;
+    /* font-family: Arial,Helvetica,sans-serif; */
     font-size: 14px;
 }
 
-/* Header 区域样式 */
+.content
+{
+    width: 980px;
+    min-height: 500px;
+    margin: 25px auto;             /*整体页面内容居中*/
+    overflow: hidden;
+}
 
-.header 
+.mainbox
+{
+    width: auto;
+    float: left;
+}
+
+.sidebar
+{
+    width: 274px;
+    float: right;
+}
+
+.sidebox
+{
+}
+
+/* Header Bar */
+
+.header-bar 
 {
     padding: 3px 8px 0;
     margin:0 auto;              /*居中作用*/
@@ -18,17 +55,25 @@ body
     border-bottom: 1px solid #C9D7F1;
     font-size: 13px;
     width: 75%;
+    min-width: 980px;
 }
 
-.header .left
+.header-bar .left
 {
     float: left;
 }
 
-.header .right
+.header-bar .right
 {
     float: right;
     text-align: right;
+}
+
+.header
+{
+    width: 75%;
+    min-width: 980px;
+    margin: 0 auto;
 }
 
 /* Footer 区域样式 */
@@ -38,4 +83,11 @@ body
     margin-top: 50px;
     text-align: center;
     font-size: 12px;
+}
+
+
+.debug
+{
+    background-color: yellow;
+    border: 1px solid red;
 }

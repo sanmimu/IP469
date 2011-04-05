@@ -11,7 +11,7 @@ PAGE_1ST = 1
 DEFAULT_PAGE = PAGE_1ST
 CATEGORY_ALL = 0
 DEFAULT_CATEGORY = CATEGORY_ALL
-MAX_TITLE_LEN = 75
+MAX_TITLE_LEN = 775
 
 def tuan_city_category_page(request, city, category, page):
     """
@@ -61,6 +61,8 @@ def tuan_city_category_page(request, city, category, page):
         city_name = city_query[0].name
     # 获取团购网站列表
     site = models.Site.objects.all()
+    # 获取城市列表
+    city_list = models.City.objects.all()
     return render_to_response('tuan.html', locals())
 
 def tuan_city_category(request, city, category):

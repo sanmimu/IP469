@@ -16,94 +16,154 @@
   </head>
 
   <body>
+    <div class="container">
 
+      {% include "header-bar.html" %}
 
-    {% include "header.html" %}
+      <div class="header">
 
-    <div class="site_list">
-      <h3>团购名站</h3>
-      {% for s in site %}
-      <span class="site_item">
-        <a title="{{s.name}}" href="{{s.url}}" target="_blank">{{s.name}}</a>
-      </span>
-      {% endfor %}
-    </div>
-
-    <br/>
-
-    <div>
-      <p>
-        当前位置： 
-        城市：{{city_name}}  ｜
-        分类：{{category}} ｜
-        页码：{{page}}  ｜
-        总数：{{total}}
-      </p>
-    </div>
-
-    {% include "tuan-page_nav.html" %}
-
-    <br/>
-
-    <div class="deallist">
-
-      {% if deals|length == 0 %}
-
-      抱歉，暂无团购商品。
-
-      {% else %}
-
-      <div class="list">
-        
-
-        {%for deal in deals%}
-
-        <div class="deal">
-          <!-- 区域：商品图片 -->
-          <div class="image" onmouseover="switch_hover(this);">
-            <a title="{{deal.title}}"
-               href="{{deal.url}}" target="_blank">
-              <img alt="{{deal.title}}" src="{{deal.image}}" style="weight: 175px; width:255px">
-            </a>
-          </div>
-          
-          <!-- 区域：商品信息-->
-          <div class="info">
-	    <h4>
-              {% if deal.site_name != '' %}
-              <a title="{{deal.site_name}}" href="{{deal.site_url}}" target="_blank">
-                【{{deal.site_name}}】
-              </a>
-              
-              {% endif %}
-              <a title="{{deal.title}}" href="{{deal.url}}" target="_blank">
-                {{ deal.title_short }}
-            </a></h4>
-	    <p class="p_1"> <span class="site"><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">去看看！</a></span> </p>
-	    <p class="p_2">
-              <span>现价：<em class="price">¥{{deal.price}}</em></span>
-              <span>原价：<em class="value">¥{{deal.value}}</em></span>
-              <span>节省：<em class="saving">¥{{deal.saving}}</em></span>
-              <span>折扣：<em class="rebate">{{deal.rebate}}折</em></span>
-            </p>
-	    <p class="p_3">共有{{deal.bought}} 人购买。剩余时间：{{deal.time_end|timeuntil}}，抓取时间： {{deal.grabtime}}<div class="timeleft" id="timeleft_counter" timeleft="{{deal.timeleft}}" timebegin="{{deal.grabtime}}"><!-- show(timeleft-(now()-grabtime))--> </div></p>
-	  </div>
-
+        <div class="logo">
+          <h1>
+            <a title="团购单" href="http://ip469.com/tuan">团购单</a>
+          </h1>
+          <h2>最全、最新的团购清单！</h2>
         </div>
-
-        {%endfor%}
 
       </div>
 
-      {% endif %}
+      <div class="content">
+        <div class="mainbox">
+
+          <div class="deallist">
+            
+
+            {% if deals|length == 0 %}
+
+            抱歉，暂无团购商品。
+
+            {% else %}
+
+            <div class="list">
+              
+
+              {%for deal in deals%}
+
+              <div class="deal" >
+                <!-- 区域：商品图片 -->
+                <div class="image" onmouseover="switch_hover(this);">
+                  <a title="{{deal.title}}"
+                     href="{{deal.url}}" target="_blank">
+                    <img alt="{{deal.title}}" src="{{deal.image}}">
+                  </a>
+                </div>
+                
+                <!-- 区域：商品信息-->
+                <div class="info">
+                  <div class="title_section">
+	            <h4>
+                      {% if deal.site_name != '' %}
+                      <a title="{{deal.site_name}}" href="{{deal.site_url}}" target="_blank" class="site_name">
+                        【{{deal.site_name}}】
+                      </a>
+                      
+                      {% endif %}
+                      <a title="{{deal.title}}" href="{{deal.url}}" target="_blank">
+                        {{ deal.title_short }}
+                    </a></h4>
+                  </div>
+                  <!--p>&nbsp;</p-->
+	          <p class="p_1">
+                    <span>原价：<em class="value">¥{{deal.value}}</em></span>
+                    <span>现价：<em class="price">¥{{deal.price}}</em></span>
+                    <span>折扣：<em class="rebate">{{deal.rebate}}折</em></span>
+                  </p>
+	          <p class="p_2">
+                    <span>可省：<em class="saving">¥{{deal.saving}}</em></span>
+                    <span>&nbsp;</span>
+                    <span>已有<em class="bought">{{deal.bought}}</em>人购买</span>
+                  </p>
+	          <p class="p_3">
+                    <span class="timeleft">剩余：<em>{{deal.time_end|timeuntil}}</em></span>
+                    <!--span>&nbsp;</span-->
+                    <span class="go"><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">去看看！</a></span>
+                    <!--，抓取时间： {{deal.grabtime}}-->
+                  </p>
+	        </div>
+
+              </div>
+
+              {%endfor%}
+
+            </div>
+
+            {% endif %}
+
+          </div>
+
+          <div class="page_nav">
+            {% include "tuan-page_nav.html" %}
+          </div>
+
+
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebox">
+            <div class="sidebox-top">&nbsp;</div>
+            <div class="sidebox-content">
+              <div class="site_list">
+                <div class="title">
+                  <h2>团购名站</h2>
+                </div>
+                <div class="list">
+                  {% for s in site %}
+                  <span class="site_item">
+                    <a title="{{s.name}}" href="{{s.url}}" target="_blank">{{s.name}}</a>
+                  </span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="sidebox-bottom bottom-line"><br/>&nbsp;<br/></div>
+          </div>
+
+          <div class="sidebox">
+            <div class="sidebox-top">&nbsp;</div>
+            <div class="sidebox-content">
+              <div class="citynav">
+                <h2>城市列表</h2>
+                {% for city in city_list %}
+                {% if city_name == city.name %}
+                <span>{{city_name}}</span>
+                {% else %}
+                <a href='/tuan/{{city.city}}'>{{city.name}}</a>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="sidebox-bottom bottom-line"><br/>&nbsp;<br/></div>
+          </div>
+
+          <div class="sidebox">
+            <div class="sidebox-top"></div>
+            <div class="sidebox-content">
+              <h2>最新消息</h2>
+              <ul>
+                <li>IP469网站上线啦！</li>
+                <li>团购单频道上线啦！</li>
+                <li>影视推荐频道即将为你服务！</li>
+              </ul>
+            </div>
+            <div class="sidebox-bottom bottom-line"></div>
+          </div>
+
+        </div>
+
+
+      </div>
+
+        {% include "footer.html" %}
 
     </div>
-
-    <div></div>
-
-    {% include "tuan-page_nav.html" %}
-
-    {% include "footer.html" %}
-
   </body>
 </html>

@@ -1,47 +1,24 @@
 /* -*-coding:utf-8-*- */
 
-div, ul, ol, li, , h1, h2, h3, h4, h5, h6, p
-{
-    margin: 0;
-    padding: 0;
-}
-
-fieldset, img, button, input
-{
-    border:0 none;
-}
-
 .deallist
 {
     margin: 0;
-}
-
-.hover {
-    background-color: #DDEDCC;
-}
-
-ul, ol {
-    list-style:none outside none;
-}
-.list
-{
-//    width: 758px;
-}
-
-.list li
-{
-    background-color:#F9F9F9;
-    border-top:1px solid #E7E7E7;
-    height:160px;
-    margin:0 10px 10px;
-    padding:8px;
+    width: 610px;
+    display: block;
 }
 
 .deal
 {
     display: block;
-    width: 758px;
-    height: 160px;
+    height: 150px;
+    padding-top: 6px;
+    border-bottom: 1px solid #76A045;
+    border-top: 1px solid #76A045;
+    /*border-bottom: 1px dashed #CCCCCC;*/
+}
+
+.deal:hover
+{
 }
 
 .deal a:link, a:visited
@@ -53,82 +30,55 @@ ul, ol {
 {
     display: inline;
     float: left;
-    height: 154px;
     overflow: hidden;
+}
+
+.deal .image img
+{
+    width: 232px;
+    height: 143px;
+    border: 0px;
+/*    weight: 175px; */
+/*    width:255px */
 }
 
 .deal .info
 {
     display: inline;
     float: left;
-    height: 160px;
     overflow: hidden;
-}
-
-.deal .info
-{
-    margin-left: 15px;
+    margin-left: 8px;
     background-color: transparent;
     font-size: 12px;
-    width: 450px;
+    width: 370px;
+}
+
+.deal .info .title_section
+{
+    border-bottom: 1px dashed #76A045;
+    /*border-bottom: 1px dashed #E4E4E4;*/
+    overflow: hidden;
+    height:42px;
+    font-size:14px;
+    line-height:22px;
 }
 
 .deal .info h4
 {
     margin-top: -5px;
-    font-size:14px;
-//    height:30px;
-    line-height:25px;
-//    overflow: hidden;
-//    white-space:pre-wrap;//nowrap;
-    border-bottom: 1px solid #E4E4E4;
+    font-weight: normal;
 }
 
 .deal .info a:hover, a:active
 {
     text-decoration:underline;
 }
-
 .deal .info a
 {
     color:#325E7F;
 }
 
-.deal .info .p_1
-{
-    height: 12px;
-    line-height: 6px;
-    margin:10px 0 5px;
-}
-
-.deal .info .p_1 .site
-{
-    color: #D80000 !important;
-    font-size: 16px;
-}
-
-
-.deal .info .p_1 .site a
-{
-    color: #D80000;
-}
-
-
-.deal .info .p_2
-{
-    height:20px;
-    margin-bottom:12px;
-    overflow:hidden;
-}
-
-.deal .info .p_2 span
-{
-    display:inline;
-    float:left;
-    width:108px;
-}
-
-.deal .info .p_2 em
+.deal .info em
 {
     font-family:"arial";
     font-size:16px;
@@ -136,17 +86,52 @@ ul, ol {
 }
 
 
-.deal .info .p_2 .price
+.deal .info .site_name
+{
+    color:#00993E;
+}
+
+.deal .info p
+{
+    height: 30px;
+    margin:6px 0px 0px 0px;
+    overflow:hidden;
+}
+
+
+/* .deal .info .p_2 */
+/* { */
+/*     height:36px; */
+/*     overflow:hidden; */
+/* } */
+
+.deal .info span
+{
+    display:inline;
+    float:left;
+    width:120px;
+    line-height: 30px;
+}
+.deal .info .timeleft
+{
+    width:240px;
+}
+
+.deal .info .price
 {
     font-weight: bold;
+    font-size: 26px;
     color:#D80000 !important;
+    line-height: 10px;
 }
 
-.deal .info .p_2 .value
+.deal .info .value
 {
+    text-decoration: line-through;
+    font-style: italic;
 }
 
-.deal .info .p_2 .saving, .rebate
+.deal .info .saving, .rebate
 {
     color:#D80000 !important;
 }
@@ -156,21 +141,40 @@ ul, ol {
     line-height: 10px;
 }
 
-.deal .info .p_3 .site_name
+/* .deal .info .p_3 .site_name */
+/* { */
+/*     font-weight: bold; */
+/*     color:#D80000; */
+/* } */
+
+/* .deal .info .p_3 .site_name a */
+/* { */
+/*     color:#D80000; */
+/* } */
+
+.deal .info .p_3 .go
 {
-    font-weight: bold;
-    color:#D80000;
+    color: #D80000 !important;
+    font-size: 16px;
 }
 
-.deal .info .p_3 .site_name a
+.deal .info .p_3 .go a
 {
-    color:#D80000;
+    color: #00993E;
+    /*background-color: yellow;*/
 }
 
+
+.sidebox h2
+{
+    font-size: 16px;
+    font-weight: normal;
+}
 
 .site_list
 {
     display: block;
+    overflow: hidden;
 }
 
 .site_item
@@ -180,11 +184,61 @@ ul, ol {
     overflow: hidden;
     padding: 0px 15px 12px 0px
     text-align: left;
-    width: 85px;
+    width: 55px;
 }
 
 
+.bottom-line
+{
+    border-bottom: 1px dashed #76A045;
+}
 
+.page_nav
+{
+    margin: 10px auto;
+    text-align: center;
+}
 
+.page_nav a, .page_nav span
+{
+    border: 1px solid #D5D5D5;
+    border-radius: 3px 3px 3px 3px;
+    display: inline-block;
+    overflow: hidden;
+    padding: 3px 3px 3px 3px;
+}
 
+.logo
+{
+    border: 1px solid #76A045;
+    border-radius: 5px 5px 5px 5px;
+    /*background-color: #2DB966;*/
+    /*width: 161px;*/
+    height: 100px;
+    margin-top: 10px;
+    padding-left: 20px;
+}
+.logo h1
+{
+    font-size: 20px;
+    font-weight: normal;
+}
+.logo h2
+{
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.citynav a, .citynav span
+{
+    display: inline-block;
+    overflow: hidden;
+    padding: 3px 3px 3px 3px;
+    width: 55px;
+    text-align: center;
+}
+.citynav span
+{
+    background-color: #76A045;
+}
 

@@ -20,7 +20,10 @@ class Deal(models.Model):
     category = models.IntegerField(default=0, help_text='商品分类')
     rank = models.IntegerField(default=0, help_text='商品等级')
     def __unicode__(self):
-        return self.title
+        title = self.title
+        if len(title) == 0:
+            title = '!!空白!!'
+        return self.site.decode('utf8') + '@' + self.city.decode('utf8') + '-' + title.decode('utf8')
 
 
 # 团购网站的信息

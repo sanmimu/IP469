@@ -1,32 +1,31 @@
 <!-- -*-coding:utf-8-*- -->
 
-<div class="page_nav">
 
   {% if page > 1 %}
-  <a title="到最前一页" href="/{{city}}/category/{{category}}/page/1/"><<最前</a>
+  <a title="到最前一页" href="/{{city}}/category/{{category}}/page/1/">&lt;&lt;最前</a>
   {% else %}
-  <<最前
+  <span>&lt;&lt;最前</span>
   {% endif %}
 
   {% if prev_page != 0 and prev_page >= 1 %}
-  <a title="到前一页" href="/{{city}}/category/{{category}}/page/{{prev_page}}/"><前</a>
+  <a title="到前一页" href="/{{city}}/category/{{category}}/page/{{prev_page}}/">&lt;前一页</a>
   {% else %}
-  <前
+  <span>&lt;前一页</span>
   {% endif %}
 
-  第{{page}}页 共{{max_page}}页 共{{total}}条
+  <span>第{{page}}页</span>
+  <span>共{{max_page}}页</span>
+  <span>共{{total}}条</span>
 
   {% if next_page != 0 and next_page <= max_page %}
-  <a title="到后一页" href="/{{city}}/category/{{category}}/page/{{next_page}}/">后></a>
+  <a title="到后一页" href="/{{city}}/category/{{category}}/page/{{next_page}}/">后一页&gt;</a>
   {% else %}
-  后>
+  <span>后一页&gt;</span>
   {% endif %}
 
   {% if page < max_page %}
-  <a title="到最后一页" href="/{{city}}/category/{{category}}/page/{{max_page}}/"><最后>></a>
+  <a title="到最后一页" href="/{{city}}/category/{{category}}/page/{{max_page}}/"><最后&gt;&gt;</a>
   {% else %}
-  最后>>
+  <span>最后&gt;&gt;</span>
   {% endif %}
 
-
-</div>
