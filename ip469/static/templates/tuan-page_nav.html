@@ -2,13 +2,13 @@
 
 
   {% if page > 1 %}
-  <a title="到最前一页" href="/{{city}}/category/{{category}}/page/1/">&lt;&lt;最前</a>
+  <a title="到最前一页" href="/tuan/{{city}}/category/{{category}}/page/1/">&lt;&lt;最前</a>
   {% else %}
   <span>&lt;&lt;最前</span>
   {% endif %}
 
   {% if prev_page != 0 and prev_page >= 1 %}
-  <a title="到前一页" href="/{{city}}/category/{{category}}/page/{{prev_page}}/">&lt;前一页</a>
+  <a title="到前一页" href="/tuan/{{city}}/category/{{category}}/page/{{prev_page}}/">&lt;前一页</a>
   {% else %}
   <span>&lt;前一页</span>
   {% endif %}
@@ -18,13 +18,13 @@
   <span>共{{total}}条</span>
 
   {% if next_page != 0 and next_page <= max_page %}
-  <a title="到后一页" href="/{{city}}/category/{{category}}/page/{{next_page}}/">后一页&gt;</a>
+  <a title="到后一页" href="/tuan/{{city}}/category/{{category}}/page/{{next_page}}/">后一页&gt;</a>
   {% else %}
   <span>后一页&gt;</span>
   {% endif %}
 
   {% if page < max_page %}
-  <a title="到最后一页" href="/{{city}}/category/{{category}}/page/{{max_page}}/"><最后&gt;&gt;</a>
+  <a title="到最后一页" href="/tuan/{{city}}/category/{{category}}/page/{{max_page}}/"><最后&gt;&gt;</a>
   {% else %}
   <span>最后&gt;&gt;</span>
   {% endif %}
