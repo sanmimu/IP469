@@ -263,6 +263,9 @@ class CitySpiderBase(SGMLParser):
     def start_a(self, attrs):
         self.state.start_a(attrs)
         
+    def start_li(self, attrs):
+        self.state.start_li(attrs)
+        
     def __str__(self):
         result=''
         for city, name, url in self.zip_info():

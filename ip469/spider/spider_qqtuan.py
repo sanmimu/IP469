@@ -10,30 +10,23 @@ from spider_base import *
 class StateInitial(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c == 'index_tuan_tit':
+        if c == 'tuan_list_number':
             self.change_state(self.context.state_h3_title)
 
 class StateH3Title(StateBase):
     def start_h3(self, attrs):
-        self.change_state(self.context.state_span_title)
+        self.change_state(self.context.state_url)
 
-class StateSpanTitle(StateBase):
-    def start_span(self, attrs):
-        c=get_attr(attrs, 'class')
-        if c == 'c_tx4':
-            self.change_state(self.context.state_title)
-
-class StateTitle(StateBase):
-    def handle_data(self, data):
-        title=data.strip()
-        self.context.add_title(title)
-        self.change_state(self.context.state_div_attr)
-
-class StateDivAttr(StateBase):
-    def start_div(self, attrs):
-        c=get_attr(attrs, 'class')
-        if c == 'index_tuan_attr':
-            self.change_state(self.context.state_span_price)
+class StateUrl(StateBase):
+    def start_a(self, attrs):
+        show_href=get_attr(attrs,'href')
+        url_prefix='http://tuan.qq.com'
+        ch='/'
+        if show_href[0] == '/':
+            ch=''
+        url = url_prefix + ch + show_href
+        self.context.add_url(url)
+        self.change_state(self.context.state_span_price)
 
 class StateSpanPrice(StateBase):
     def start_span(self, attrs):
@@ -45,37 +38,32 @@ class StatePrice(StateBase):
     def handle_data(self, data):
         price=parse_first_float(data.strip())
         self.context.add_price(price)
-        self.change_state(self.context.state_p_value)
+        self.change_state(self.context.state_ul_value)
 
-class StatePValue(StateBase):
-    def start_p(self, attrs):
+class StateUlValue(StateBase):
+    def start_ul(self, attrs):
         c=get_attr(attrs, 'class')
-        if c=='original_price':
-            self.change_state(self.context.state_del_value)
+        if c=='price_all':
+            self.change_state(self.context.state_li_value)
 
-class StateDelValue(StateBase):
-    def start_del(self, attrs):
-        self.change_state(self.context.state_value)
+class StateLiValue(StateBase):
+    def enter(self):
+        self.times=0
+    def exit(self):
+        self.times=0
+    def start_li(self, attrs):
+        self.times = self.times + 1
+    def handle_data(self, data):
+        if self.times == 2:
+            self.change_state(self.context.state_value)
+    # def start_del(self, attrs):
+    #     self.change_state(self.context.state_value)
 
 class StateValue(StateBase):
     def handle_data(self, data):
         value=parse_first_float(data.strip())
         self.context.add_value(value)
-        self.change_state(self.context.state_url)
-
-class StateUrl(StateBase):
-    def start_a(self, attrs):
-        if get_attr(attrs,'id')=='v:buy_button':
-            buy_href=get_attr(attrs,'href')
-            show_href=buy_href.replace('buy', 'show')
-            url_prefix='http://tuan.qq.com'
-            ch='/'
-            if show_href[0] == '/':
-                ch=''
-            url = url_prefix + ch + show_href
-            self.context.add_url(url)
-            self.change_state(self.context.state_span_bought)
-                
+        self.change_state(self.context.state_span_bought)
 
 class StateSpanBought(StateBase):
     def start_span(self, attrs):
@@ -131,13 +119,16 @@ class StateLefttime(StateBase):
 
 class StateDivImage(StateBase):
     def start_div(self, attrs):
-        if get_attr(attrs, 'class')=='index_tuan_photo':
+        c=get_attr(attrs, 'class')
+        if c in ['list_photo_details', 'first_photo_details']:
             self.change_state(self.context.state_image)
 
 class StateImage(StateBase):
     def start_img(self, attrs):
         img=get_attr(attrs, 'init_src')
+        title=get_attr(attrs, 'alt')
         self.context.add_image(img)
+        self.context.add_title(title)
         self.change_state(self.context.state_initial)
 
 class SpiderQQTuan(SpiderBase):
@@ -146,15 +137,12 @@ class SpiderQQTuan(SpiderBase):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
         self.state_h3_title=StateH3Title(self)
-        self.state_span_title=StateSpanTitle(self)
-        self.state_title=StateTitle(self)
-        self.state_div_attr=StateDivAttr(self)
+        self.state_url=StateUrl(self)
         self.state_span_price=StateSpanPrice(self)
         self.state_price=StatePrice(self)
-        self.state_p_value=StatePValue(self)
-        self.state_del_value=StateDelValue(self)
+        self.state_ul_value=StateUlValue(self)
+        self.state_li_value=StateLiValue(self)
         self.state_value=StateValue(self)
-        self.state_url=StateUrl(self)
         self.state_span_bought=StateSpanBought(self)
         self.state_bought=StateBought(self)
         self.state_lefttime=StateLefttime(self)
