@@ -18,16 +18,24 @@ class StateInitial(StateBase):
 class StateDivGoods(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c == 'mid':
+        c=c.split(' ')
+        if 'mid' in c:
             self.change_state(self.context.state_div_mid)
 
 class StateDivMid(StateBase):
+    def enter(self):
+        self.has_url=False
+    def exit(self):
+        self.has_url=False
     def start_a(self, attrs):
-        title=get_attr(attrs, 'title')
         href=get_attr(attrs, 'href')
-        self.context.add_title(title)
         self.context.add_url(href)
-        self.change_state(self.context.state_div_price)
+        self.has_url=True
+    def handle_data(self, data):
+        if self.has_url:
+            title=data.strip()
+            self.context.add_title(title)
+            self.change_state(self.context.state_div_price)
 
 class StateDivPrice(StateBase):
     def start_div(self, attrs):
@@ -47,21 +55,7 @@ class StateH4Value(StateBase):
     def start_h4(self, attrs):
         value=get_attr(attrs, 'title')
         self.context.add_value(value)
-        self.change_state(self.context.state_div_image)
-
-
-class StateDivImage(StateBase):
-    def start_div(self, attrs):
-        c=get_attr(attrs, 'class')
-        if c == 'image':
-            self.change_state(self.context.state_image)
-
-class StateImage(StateBase):
-    def start_img(self, attrs):
-        img=get_attr(attrs, 'src')
-        self.context.add_image(img)
         self.change_state(self.context.state_div_timeleft)
-
 
 class StateDivTimeLeft(StateBase):
     def start_div(self, attrs):
@@ -91,7 +85,20 @@ class StateBought(StateBase):
         self.context.logger.debug('got bought ' + bought
                                   + ' from ' + data.strip())
         self.context.add_bought(bought)
+        self.change_state(self.context.state_div_image)
+
+class StateDivImage(StateBase):
+    def start_div(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'image':
+            self.change_state(self.context.state_image)
+
+class StateImage(StateBase):
+    def start_img(self, attrs):
+        img=get_attr(attrs, 'src')
+        self.context.add_image(img)
         self.change_state(self.context.state_initial)
+
 
 
 

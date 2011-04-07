@@ -33,7 +33,7 @@ class Site(models.Model):
     url = models.TextField()  # 网站URL
     rank = models.IntegerField(default=0, help_text='网站等级')
     def __unicode__(self):
-        return self.name
+        return self.name.decode('utf8')
 
 
 # 商品分类
@@ -41,7 +41,7 @@ class Category(models.Model):
     name = models.CharField(max_length=64) # 分类名称
     rank = models.IntegerField(default=0, help_text='分类等级')
     def __unicode__(self):
-        return self.name
+        return self.name.decode('utf8')
 
 
 # 城市信息
@@ -50,7 +50,7 @@ class City(models.Model):
     name = models.CharField(max_length=64) # 城市名称
     rank = models.IntegerField(default=0, help_text='城市等级')
     def __unicode__(self):
-        return self.name
+        return self.name.decode('utf8')
 
     
 
@@ -62,6 +62,6 @@ class SiteCity(models.Model):
     url = models.TextField() # 团购网站子城市URL
     grabtime = models.DateTimeField(help_text='抓取时间')
     def __unicode__(self):
-        return self.name
+        return self.name.decode('utf8')
     
 

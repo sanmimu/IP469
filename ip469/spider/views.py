@@ -12,23 +12,18 @@ from spider import DealSpider
 from spider import CitySpider
 import site_data
 
+import logging
+import settings
+logging.basicConfig(filename=settings.LOG_ROOT + 'spider-views.log',
+                    level=logging.DEBUG)
+
+class FetchResultInfo():
+    pass
+    
+
 def deal_spider_site_city(request, site, city):
     """
     """
-
-    response = HttpResponse()
-    response['Cache-Control'] = 'no-cache'
-
-    html_header = loader.get_template('header.html').render(Context())
-    html_footer = loader.get_template('footer.html').render(Context())
-
-    tpl_fetch = Template('<p>Fetching from {{site}} @ {{city}} : {{url}} ... ')
-    tpl_store = Template('{{n}} deals.</p>')
-    tpl_fetch_fail = Template(' fail.</p>')
-    tpl_total = Template('<p>总共抓取 {{total}} 条记录</p>')
-
-    response.write(html_header)
-
     query=None
     if (site != None) and (city != None):
         query = models.SiteCity.objects.filter(site=site, city=city)
@@ -39,23 +34,23 @@ def deal_spider_site_city(request, site, city):
     else:
         query = models.SiteCity.objects.all()
     total = 0
+    results = []
     for sc in query:
         factory=SpiderFactory()
         engine = DealSpider()
         spider = factory.new_deal_spider(sc.site)
-        response.write(tpl_fetch.render(Context({'url': sc.url, 'site':sc.site, 'city':sc.city})));
-        ok = engine.fetch_and_parse(spider, sc.url)
-        if ok:
-            n = engine.store_result(spider, sc.site, sc.city)
-            response.write(tpl_store.render(Context({'n': n})))
-            total += n
-        else:
-            response.write(tpl_fetch_fail.render(Context({})))
-    response.write(tpl_total.render(Context({'total':total})))
+        result = FetchResultInfo()
+        result.url = sc.url
+        result.site = sc.site
+        result.city = sc.city
+        result.name = sc.name
+        result.ok = engine.fetch_and_parse(spider, sc.url)
+        if result.ok:
+            result.n = engine.store_result(spider, sc.site, sc.city)
+            total += result.n
+        results.append(result)
 
-    response.write(html_footer)
-
-    return response
+    return render_to_response('tuan-spider.html', locals())
 
 def deal_spider_site(request, site):
     return deal_spider_site_city(request, site, None)
@@ -66,51 +61,13 @@ def deal_spider_city(request, city):
 def deal_spider_all(request):
     return deal_spider_site_city(request, None, None)
 
-def city_spider(request):
-    response = HttpResponse()
-    response['Cache-Control'] = 'no-cache'
-
-    html_header = loader.get_template('header.html').render(Context())
-    html_footer = loader.get_template('footer.html').render(Context())
-
-    tpl_fetch = Template('<p>Fetching from {{site}} : {{url}} ... ')
-    tpl_store = Template('{{n}} cities.</p>')
-    tpl_total = Template('<p>总共抓取 {{total}} 条记录</p>')
-
-    response.write(html_header)
-
-    query=models.Site.objects.all()
-    total=0
-    for site in query:
-        factory=SpiderFactory()
-        engine = CitySpider()
-        spider = factory.new_city_spider(site.site)
-        engine.fetch_and_parse(spider, site.url)
-        response.write(tpl_fetch.render(Context({'url':site.url, 'site':site.site})))
-        n=engine.store_result(spider, site.site)
-        response.write(tpl_store.render(Context({'n':n})))
-        total += n
-        print n
-    response.write(tpl_total.render(Context({'total':total})))
-    print total
-
-    response.write(html_footer)
-
-    return response
-
-
 def load_default_site_data(request):
     '''从site_data.py加载默认网站数据'''
     response = HttpResponse()
     
-    html_header = loader.get_template('header.html').render(Context())
-    html_footer = loader.get_template('footer.html').render(Context())
-
     tpl_exists = Template('[WARN] {{model_name}} {{key}} <strong>already exists</strong>: {{detail}}<br/>')
     tpl_ok = Template('[INFO] {{model_name}} {{key}} <strong>saved</strong><br/>')
     tpl_multi = Template('<strong>[ERROR]</strong> Multi {{key}} in model {{model_name}} exists<br/>')
-
-    response.write(html_header)
 
     model_name='City'
     for key,v in site_data.city_list.iteritems():
@@ -149,6 +106,5 @@ def load_default_site_data(request):
             response.write(tpl_ok.render(Context(locals())))
         except models.SiteCity.MultipleObjectsReturned:
             response.write(tpl_multi.render(Context(locals())))
-    response.write(html_footer)
     return response
 
