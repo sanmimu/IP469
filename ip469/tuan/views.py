@@ -74,9 +74,9 @@ def tuan_city_category_page(request, city, category, page):
     if city_query.count() == 1:
         city_name = city_query[0].name
     # 获取团购网站列表
-    site = models.Site.objects.all()
+    site = models.Site.objects.all().order_by('-rank')
     # 获取城市列表
-    city_list = models.City.objects.all()
+    city_list = models.City.objects.all().order_by('-rank')
     return render_to_response('tuan.html', locals())
 
 def tuan_city_category(request, city, category):
