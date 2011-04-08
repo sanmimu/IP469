@@ -265,6 +265,8 @@ class CitySpiderBase(SGMLParser):
         
     def start_li(self, attrs):
         self.state.start_li(attrs)
+    def start_ul(self, attrs):
+        self.state.start_ul(attrs)
         
     def __str__(self):
         result=''

@@ -4,6 +4,14 @@ import datetime
 from django.shortcuts import render_to_response
 
 import models
+from ip469.ip import ip_convert
+from ip469.ip import models as ip_models
+
+import logging
+import settings
+logging.basicConfig(filename=settings.LOG_ROOT + 'tuan-views.log',
+                    level=logging.DEBUG)
+
 
 DEFAULT_COUNT_PER_PAGE = 30
 PAGE_BAD = 0
@@ -12,6 +20,12 @@ DEFAULT_PAGE = PAGE_1ST
 CATEGORY_ALL = 0
 DEFAULT_CATEGORY = CATEGORY_ALL
 MAX_TITLE_LEN = 775
+
+def get_client_ip(request):
+    if 'HTTP_X_FORWARDED_FOR' in request.META.keys():
+        return request.META['HTTP_X_FORWARDED_FOR']
+    else:
+        return request.META['REMOTE_ADDR']
 
 def tuan_city_category_page(request, city, category, page):
     """
@@ -75,7 +89,23 @@ def tuan_city(request, city):
     return tuan_city_page(request, city, DEFAULT_PAGE)
 
 def tuan_page(request, page):
-    return tuan_city_page(request, 'shenzhen', page)
+    logger = logging.getLogger('tuan_page')
+    ip_string = get_client_ip(request)
+    ip = ip_convert.ipv4_from_string(ip_string)
+    city_name = ip_models.Ipv4Info.objects.get_city_by_ip(ip)
+    logger.debug('city_name is ' + city_name)
+    city = 'beijing'           # default value
+    if city_name != '':
+        city_name_uni=city_name.decode('utf8')
+        if len(city_name_uni) >= 2:
+            city_name_2prefix = city_name_uni[0:2].encode('utf8')
+            query = models.City.objects.filter(
+                name__istartswith = city_name_2prefix)
+            if query.count() > 0:
+                city = query[0].city
+                logger.debug('found city ' + city + ' by ip ' + ip_string)
+    logger.debug('city is ' + city)
+    return tuan_city_page(request, city, page)
 
 def tuan(request):
    return tuan_page(request, DEFAULT_PAGE)

@@ -32,7 +32,7 @@ def query_by_ipv4_inner(request, ipv4):
     """
     """
     logger = logging.getLogger('query_by_ipv4_inner')
-    ip_infos = models.Ipv4Info.objects.filter_by_ip(ipv4)
+    ip_infos = models.Ipv4Info.objects.filter_by_ip(ipv4)[:5]
     ip_string = ip_convert.ipv4_to_string(ipv4)
     ip_value = ip_convert.ipv4_int2readable(ipv4)
     ip_client_string = get_client_ip(request)

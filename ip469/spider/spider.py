@@ -44,9 +44,12 @@ class DealSpider:
                 deal.city = city
                 deal.category = 0
                 deal.rank = site_rank
-                deal.save()
-                n += 1
-                self.logger.debug('deal saved, site=' + site + ',city=' + city + ',url=' + url)
+                try:
+                    deal.save()
+                    n += 1
+                    self.logger.debug('deal saved, site=' + site + ',city=' + city + ',url=' + url)
+                except:
+                    self.logger.error('save failed for deal ' + unicode(deal) + ', url=' + deal.url)
             elif query.count() == 1:
                 # 更新
                 deal = query[0]
@@ -65,9 +68,12 @@ class DealSpider:
                 deal.bought = float(bought)
                 if deal.rank < site_rank:
                     deal.rank = site_rank
-                deal.save()
-                n += 1
-                self.logger.debug('deal updated, site=' + site + ',city=' + city + ',url=' + url)
+                try:
+                    deal.save()
+                    n += 1
+                    self.logger.debug('deal updated, site=' + site + ',city=' + city + ',url=' + url)
+                except:
+                    self.logger.error('save failed for deal ' + unicode(deal) + ', url=' + deal.url)
             else:
                 # 错误！
                 self.logger.error('multi deals exist, site=' + site + ',city=' + city + ',url=' + url)

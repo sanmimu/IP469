@@ -5,28 +5,16 @@
 import re
 import logging
 from spider_base import *
+import datetime
 
 
 class StateInitial(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c == 'tuan_list_number':
-            self.change_state(self.context.state_h3_title)
-
-class StateH3Title(StateBase):
-    def start_h3(self, attrs):
-        self.change_state(self.context.state_url)
-
-class StateUrl(StateBase):
-    def start_a(self, attrs):
-        show_href=get_attr(attrs,'href')
-        url_prefix='http://tuan.qq.com'
-        ch='/'
-        if show_href[0] == '/':
-            ch=''
-        url = url_prefix + ch + show_href
-        self.context.add_url(url)
-        self.change_state(self.context.state_span_price)
+        if c == 'index_tuan_tit':
+            self.change_state(self.context.state_span_price)
+        elif c == 'tuan_list_tit':
+            self.change_state(self.context.state_div_image)
 
 class StateSpanPrice(StateBase):
     def start_span(self, attrs):
@@ -43,6 +31,7 @@ class StatePrice(StateBase):
 class StateUlValue(StateBase):
     def start_ul(self, attrs):
         c=get_attr(attrs, 'class')
+        self.context.logger.debug('ul class='+ c)
         if c=='price_all':
             self.change_state(self.context.state_li_value)
 
@@ -63,12 +52,17 @@ class StateValue(StateBase):
     def handle_data(self, data):
         value=parse_first_float(data.strip())
         self.context.add_value(value)
-        self.change_state(self.context.state_span_bought)
+        self.change_state(self.context.state_p_bought)
+
+class StatePBought(StateBase):
+    def start_p(self, attrs):
+        if get_attr(attrs, 'class') == 'has_tuan_people':
+            self.change_state(self.context.state_span_bought)
 
 class StateSpanBought(StateBase):
     def start_span(self, attrs):
-        if get_attr(attrs, 'id') == 'sellCountter':
-            self.change_state(self.context.state_bought)
+        self.context.logger.debug('SpanBought id='+ get_attr(attrs, 'id'))
+        self.change_state(self.context.state_bought)
 
 class StateBought(StateBase):
     def handle_data(self, data):
@@ -82,12 +76,16 @@ class StateLefttime(StateBase):
         self.hour=0
         self.minute=0
         self.second=0
+        self.day=0
+        self.next_is_datetime=False
 
     def exit(self):
         self.unit=''
         self.hour=0
         self.minute=0
         self.second=0
+        self.day=0
+        self.next_is_datetime=False
 
     def start_span(self, attrs):
         self.unit=''
@@ -96,6 +94,8 @@ class StateLefttime(StateBase):
             self.unit='hour'
         elif c == 'minute_num':
             self.unit='minute'
+        elif c == 'day':
+            self.unit='day'
         elif c == 'second_num':
             self.unit='second'
         else:
@@ -104,26 +104,58 @@ class StateLefttime(StateBase):
     def handle_data(self, data):
         unit = self.unit
         self.unit = ''
+
         value=int(parse_first_integer(data))
         if unit=='hour':
             self.hour=value
         elif unit=='minute':
             self.minute=value
+        elif unit=='day':
+            self.day=value
         elif unit=='second':
             self.second=value
-            lefttime=self.hour*60*60+self.minute*60+self.second
+            lefttime=self.day*86400+self.hour*60*60+self.minute*60+self.second
             self.context.add_time_end_by_timeleft(str(lefttime))
             self.change_state(self.context.state_div_image)
         else:
             self.context.logger.debug('skip,unit='+ unit +', value:'+data)
 
+        # 跳过结束的团购项
+        if data.strip() == '结束时间：':
+            self.context.logger.debug('this deal is disabled! '+ data)
+            self.context.add_time_end(datetime.datetime.now())
+            self.change_state(self.context.state_div_image)
+            return
+
 class StateDivImage(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c in ['list_photo_details', 'first_photo_details']:
+        if c == 'first_photo_details':
+            self.change_state(self.context.state_url)
+        elif c == 'list_photo_details':
+            self.change_state(self.context.state_url)
+
+class StateUrl(StateBase):
+    def get_url(self, href):
+        url_prefix='http://tuan.qq.com'
+        ch='/'
+        if href[0] == '/':
+            ch=''
+        return url_prefix + ch + href
+    def start_a(self, attrs):
+        i=get_attr(attrs, 'id')
+        if i == 'v:list_Rimg':
+            href=get_attr(attrs,'href')
+            self.context.add_url(self.get_url(href))
+            self.change_state(self.context.state_image_first)
+        elif i == 'v:list_img':
+            href=get_attr(attrs,'href')
+            self.context.add_url(self.get_url(href))
             self.change_state(self.context.state_image)
 
-class StateImage(StateBase):
+
+
+class StateImageFirst(StateBase):
     def start_img(self, attrs):
         img=get_attr(attrs, 'init_src')
         title=get_attr(attrs, 'alt')
@@ -131,22 +163,31 @@ class StateImage(StateBase):
         self.context.add_title(title)
         self.change_state(self.context.state_initial)
 
+class StateImage(StateBase):
+    def start_img(self, attrs):
+        img=get_attr(attrs, 'init_src')
+        title=get_attr(attrs, 'alt')
+        self.context.add_image(img)
+        self.context.add_title(title)
+        self.change_state(self.context.state_span_price)
+
 class SpiderQQTuan(SpiderBase):
     logger = logging.getLogger('spider.SpiderQQTuan')
     def __init__(self):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
-        self.state_h3_title=StateH3Title(self)
-        self.state_url=StateUrl(self)
         self.state_span_price=StateSpanPrice(self)
         self.state_price=StatePrice(self)
         self.state_ul_value=StateUlValue(self)
         self.state_li_value=StateLiValue(self)
         self.state_value=StateValue(self)
+        self.state_p_bought=StatePBought(self)
         self.state_span_bought=StateSpanBought(self)
         self.state_bought=StateBought(self)
         self.state_lefttime=StateLefttime(self)
         self.state_div_image=StateDivImage(self)
+        self.state_url=StateUrl(self)
+        self.state_image_first=StateImageFirst(self)
         self.state_image=StateImage(self)
         self.state=self.state_initial
 
