@@ -1,0 +1,8 @@
+# -*-mode:org; coding:gb18030-*-
+
+* TODO 支持识别内网IP、及IP地址类型                                      :ip:
+* TODO 版式统一，增加说明文字                                            :ip:
+* DONE 分离css及js                                                       :ip:
+  CLOSED: [2011-04-22 星期五 15:38]
+* TODO 解决IE下版式的问题                                              :tuan:
+* TODO 增加对比查询链接                                                  :ip:

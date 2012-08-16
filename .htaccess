@@ -1,0 +1,7 @@
+# -*-coding:utf-8-*-
+# see Django Docs on
+#   http://docs.djangoproject.com/en/dev/howto/deployment/fastcgi/
+# section "Running Django on a shared-hosting provider with Apache"
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ ip469_com.fcgi/$1 [QSA,L]
